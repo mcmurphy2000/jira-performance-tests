@@ -68,27 +68,28 @@ class DcReadinessTests(
             ramp = Duration.ZERO,
             flat = duration
         )
-
         val workspace = RootWorkspace(outputDirectory).currentTask.isolateTest("dc-readiness-tests")
-        val oneNodeWithoutApp = dcTestingCohort(
-            cohort = "on-one-node-without-app",
-            app = NoApp(),
-            numberOfNodes = 1
-        )
-        val oneNode = dcTestingCohort(
-            cohort = "on-one-node",
-            app = app,
-            numberOfNodes = 1
-        )
-        val twoNodes = dcTestingCohort(
-            cohort = "on-two-nodes",
-            app = app,
-            numberOfNodes = 2
-        )
-        val fourNodes = dcTestingCohort(
-            cohort = "on-four-nodes",
-            app = app,
-            numberOfNodes = 4
+        val tests = listOf(
+            dcTestingCohort(
+                cohort = "on-one-node-without-app",
+                app = NoApp(),
+                numberOfNodes = 1
+            ),
+            dcTestingCohort(
+                cohort = "on-one-node",
+                app = app,
+                numberOfNodes = 1
+            ),
+            dcTestingCohort(
+                cohort = "on-two-nodes",
+                app = app,
+                numberOfNodes = 2
+            ),
+            dcTestingCohort(
+                cohort = "on-four-nodes",
+                app = app,
+                numberOfNodes = 4
+            )
         )
         val vuConfig = VirtualUsersConfiguration(
             scenario = scenario,
@@ -96,35 +97,22 @@ class DcReadinessTests(
         )
 
         val executor = Executors.newFixedThreadPool(
-            4,
+            tests.size,
             ThreadFactoryBuilder()
                 .setNameFormat("dc-readiness-test-thread-%d")
                 .build()
         )
-        val futureOneNodeWithoutAppResults = oneNodeWithoutApp.runAsync(workspace, executor, vuConfig)
-        val futureOneNodeResults = oneNode.runAsync(workspace, executor, vuConfig)
-        val futureTwoNodesResults = twoNodes.runAsync(workspace, executor, vuConfig)
-        val futureFourNodesResults = fourNodes.runAsync(workspace, executor, vuConfig)
-        val oneNodeWithoutAppResults = futureOneNodeWithoutAppResults.get().prepareForJudgement(
-            timeline = StandardTimeline(virtualUserLoad.total)
-        )
-        val oneNodeResults = futureOneNodeResults.get().prepareForJudgement(
-            timeline = StandardTimeline(virtualUserLoad.total)
-        )
-        val twoNodesResults = futureTwoNodesResults.get().prepareForJudgement(
-            timeline = StandardTimeline(virtualUserLoad.total)
-        )
-        val fourNodesResults = futureFourNodesResults.get().prepareForJudgement(
-            timeline = StandardTimeline(virtualUserLoad.total)
-        )
+        val results = tests
+            .map { it.runAsync(workspace, executor, vuConfig) }
+            .map { it.get() }
+            .map { it.prepareForJudgement(StandardTimeline(virtualUserLoad.total)) }
         executor.shutdownNow()
 
-        listOf(oneNodeWithoutAppResults, oneNodeResults, twoNodesResults, fourNodesResults).forEach {
+        results.forEach {
             FailureJudge().judge(it.failure)
         }
-
         FullReport().dump(
-            results = listOf(oneNodeWithoutAppResults, oneNodeResults, twoNodesResults, fourNodesResults),
+            results = results,
             workspace = TestWorkspace(workspace.directory)
         )
     }
