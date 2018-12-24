@@ -8,6 +8,7 @@ import com.atlassian.performance.tools.jiraactions.api.action.CreateIssueAction;
 import com.atlassian.performance.tools.jiraactions.api.action.SearchJqlAction;
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter;
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory;
+import com.atlassian.performance.tools.jiraactions.api.memories.UserMemory;
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueKeyMemory;
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory;
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveProjectMemory;
@@ -17,7 +18,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * Example of custom scenario. Provides custom actions and explains how to override default login action.
+ */
 public class MyScenario implements Scenario {
+
+    @Override
+    public Action getLogInAction(WebJira jira, ActionMeter meter, UserMemory userMemory) {
+        return new MyLoginAction(jira, meter, userMemory);
+    }
+
     @NotNull
     @Override
     public List<Action> getActions(WebJira webJira, SeededRandom seededRandom, ActionMeter actionMeter) {
@@ -26,17 +36,17 @@ public class MyScenario implements Scenario {
         final IssueKeyMemory issueKeyMemory = new AdaptiveIssueKeyMemory(seededRandom);
         final AdaptiveProjectMemory adaptiveProjectMemory = new AdaptiveProjectMemory(seededRandom);
         return ImmutableList.of(
-                new SearchJqlAction(webJira, actionMeter, jqlMemory, issueKeyMemory),
-                new BrowseProjectsAction(webJira, actionMeter, adaptiveProjectMemory),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
-                new CustomViewIssueAction(webJira, actionMeter, issueKeyMemory)
+            new SearchJqlAction(webJira, actionMeter, jqlMemory, issueKeyMemory),
+            new BrowseProjectsAction(webJira, actionMeter, adaptiveProjectMemory),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CreateIssueAction(webJira, actionMeter, adaptiveProjectMemory, seededRandom),
+            new CustomViewIssueAction(webJira, actionMeter, issueKeyMemory)
         );
     }
 }
