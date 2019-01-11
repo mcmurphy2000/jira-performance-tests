@@ -1,7 +1,11 @@
 package com.atlassian.performance.tools.btftest;
 
 import com.atlassian.performance.tools.jiraperformancetests.api.OnPremisePerformanceTest;
+import com.atlassian.performance.tools.virtualusers.api.browsers.HeadlessChromeBrowser;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,6 +41,11 @@ public class MyJiraOnPremiseIT {
          * Optionally, change the test duration.
          */
         jiraOnPremiseTest.setTestDuration(Duration.ofMinutes(5));
+
+        /*
+         * Optionally, customize the browser.
+         */
+        jiraOnPremiseTest.setBrowser(MyCustomBrowser.class);
 
         jiraOnPremiseTest.run();
     }
