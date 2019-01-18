@@ -68,12 +68,12 @@ dependencies {
         "com.atlassian.performance.tools:workspace:[2.0.0,3.0.0)",
         "com.atlassian.performance.tools:report:[3.0.0,4.0.0)",
         "com.atlassian.performance.tools:aws-infrastructure:[2.0.0,3.0.0)",
+        "com.atlassian.performance.tools:aws-resources:[1.0.0,2.0.0)",
         "com.atlassian.performance.tools:infrastructure:[4.0.0,5.0.0)"
     ).forEach { api(it) }
 
     listOf(
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
-        "com.atlassian.performance.tools:aws-resources:[1.0.0,2.0.0)",
         "com.atlassian.performance.tools:jira-software-actions:[1.0.0,2.0.0)",
         "com.atlassian.performance.tools:virtual-users:[3.3.4,4.0.0)",
         "com.atlassian.performance.tools:concurrency:[1.0.0,2.0.0)"

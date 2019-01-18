@@ -21,6 +21,7 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ### Added
 - Add support for `report:3`.
 - Include `aws-infrastructure` in the API scope. Progress towards [JPERF-356].
+- Include `aws-resources` in the API scope. Progress towards [JPERF-356].
 
 ### Removed
 - Drop support for `report:2`.
