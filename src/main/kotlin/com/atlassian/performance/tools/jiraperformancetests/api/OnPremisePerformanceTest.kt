@@ -39,16 +39,15 @@ class OnPremisePerformanceTest(
     private val cohortName = "my-jira"
 
     fun run() {
-        val virtualUserBehavior = VirtualUserBehavior(
-            load = VirtualUserLoad(
+        val virtualUserBehavior = VirtualUserBehavior.Builder(scenario)
+            .load(VirtualUserLoad(
                 virtualUsers = virtualUsers,
                 flat = testDuration
-            ),
-            browser = browser,
-            scenario = scenario,
-            diagnosticsLimit = 64,
-            seed = Random().nextLong()
-        )
+            ))
+            .browser(browser)
+            .diagnosticsLimit(64)
+            .seed(Random().nextLong())
+            .build()
         val virtualUserTarget = VirtualUserTarget(
             webApplication = jira,
             userName = adminLogin,

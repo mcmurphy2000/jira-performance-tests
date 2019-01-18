@@ -66,7 +66,7 @@ configure<DependencyGraphGeneratorExtension> {
 dependencies {
 
     api("com.atlassian.performance.tools:workspace:[2.0.0,3.0.0)")
-    api("com.atlassian.performance.tools:report:[2.1.0,3.0.0)")
+    api("com.atlassian.performance.tools:report:[3.0.0,4.0.0)")
     api("com.atlassian.performance.tools:infrastructure:[4.0.0,5.0.0)")
 
     listOf(

@@ -54,7 +54,7 @@ class AppImpactTest(
     var criteria: Map<ActionType<*>, Criteria> = emptyMap()
     var jiraVersion: String = "7.5.0"
     var duration: Duration = Duration.ofMinutes(20)
-    internal var dataset: Dataset = DatasetCatalogue().largeJira()
+    internal var dataset: Dataset = DatasetCatalogue().largeJiraSeven()
     private val outputDirectory: Path = Paths.get("target")
     private val appLabel = app.getLabel()
 
@@ -81,13 +81,12 @@ class AppImpactTest(
             cohort = "with $appLabel",
             app = app
         )
-        val virtualUserBehavior = VirtualUserBehavior(
-            load = load,
-            browser = browser,
-            scenario = scenario,
-            diagnosticsLimit = 255,
-            seed = 123
-        )
+        val virtualUserBehavior = VirtualUserBehavior.Builder(scenario)
+            .load(load)
+            .browser(browser)
+            .diagnosticsLimit(255)
+            .seed(123)
+            .build()
         val executor = Executors.newFixedThreadPool(
             2,
             ThreadFactoryBuilder()
@@ -116,12 +115,13 @@ class AppImpactTest(
                 useCase = "Measure app impact of $appLabel",
                 lifespan = Duration.ofHours(1)
             ),
-            jiraFormula = StandaloneFormula(
-                apps = Apps(listOf(app)),
+            jiraFormula = StandaloneFormula.Builder(
                 application = JiraSoftwareStorage(jiraVersion),
                 jiraHomeSource = dataset.jiraHomeSource,
                 database = dataset.database
-            ),
+            )
+                .apps(Apps(listOf(app)))
+                .build(),
             virtualUsersFormula = Ec2VirtualUsersFormula(
                 shadowJar = testJar
             ),
