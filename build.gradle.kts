@@ -83,6 +83,7 @@ dependencies {
     listOf(
         "junit:junit:4.12",
         "org.assertj:assertj-core:3.11.0",
+        "org.codehaus.plexus:plexus-utils:3.1.0",
         "org.zeroturnaround:zt-exec:1.10"
     ).forEach { testCompile(it) }
 }
