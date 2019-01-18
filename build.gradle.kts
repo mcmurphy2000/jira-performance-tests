@@ -119,7 +119,7 @@ tasks.withType(Test::class.java) {
 
 tasks["release"].dependsOn(testAcceptance)
 
-task<Wrapper>("wrapper") {
-    gradleVersion = "4.9"
+tasks.wrapper {
+    gradleVersion = "5.1.1"
     distributionType = Wrapper.DistributionType.ALL
 }
