@@ -14,6 +14,7 @@ import com.atlassian.performance.tools.infrastructure.api.app.NoApp
 import com.atlassian.performance.tools.infrastructure.api.dataset.Dataset
 import com.atlassian.performance.tools.jiraactions.api.ActionType
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
+import com.atlassian.performance.tools.jiraperformancetests.CountingThreadFactory
 import com.atlassian.performance.tools.jirasoftwareactions.api.JiraSoftwareScenario
 import com.atlassian.performance.tools.report.api.Criteria
 import com.atlassian.performance.tools.report.api.PerformanceCriteria
@@ -24,7 +25,6 @@ import com.atlassian.performance.tools.virtualusers.api.browsers.HeadlessChromeB
 import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
 import com.atlassian.performance.tools.workspace.api.RootWorkspace
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
-import com.google.common.util.concurrent.ThreadFactoryBuilder
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -87,12 +87,7 @@ class AppImpactTest(
             .diagnosticsLimit(255)
             .seed(123)
             .build()
-        val executor = Executors.newFixedThreadPool(
-            2,
-            ThreadFactoryBuilder()
-                .setNameFormat("standalone-stability-test-thread-%d")
-                .build()
-        )
+        val executor = Executors.newFixedThreadPool(2, CountingThreadFactory("standalone-stability-test"))
         val futureBaselineResults = baseline.runAsync(workspace, executor, virtualUserBehavior)
         val futureExperimentResults = experiment.runAsync(workspace, executor, virtualUserBehavior)
         val baselineResults = futureBaselineResults.get()
