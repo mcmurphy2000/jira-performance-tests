@@ -55,7 +55,7 @@ configurations.all {
 val jptDependenciesGenerator = Generator(
     "jptLibraries",
     { dependency -> dependency.moduleGroup.startsWith("com.atlassian.performance.tools") },
-    { _ -> true },
+    { true },
     { node, _ -> node.add(Style.FILLED, Color.rgb("#ffcb2b")) }
 )
 
@@ -64,10 +64,11 @@ configure<DependencyGraphGeneratorExtension> {
 }
 
 dependencies {
-
-    api("com.atlassian.performance.tools:workspace:[2.0.0,3.0.0)")
-    api("com.atlassian.performance.tools:report:[3.0.0,4.0.0)")
-    api("com.atlassian.performance.tools:infrastructure:[4.0.0,5.0.0)")
+    listOf(
+        "com.atlassian.performance.tools:workspace:[2.0.0,3.0.0)",
+        "com.atlassian.performance.tools:report:[3.0.0,4.0.0)",
+        "com.atlassian.performance.tools:infrastructure:[4.0.0,5.0.0)"
+    ).forEach { api(it) }
 
     listOf(
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
