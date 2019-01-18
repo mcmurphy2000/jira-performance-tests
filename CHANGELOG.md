@@ -20,12 +20,15 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 
 ### Added
 - Add support for `report:3`.
+- Include `aws-infrastructure` in the API scope. Progress towards [JPERF-356].
 
 ### Removed
 - Drop support for `report:2`.
 
+[JPERF-356]: https://ecosystem.atlassian.net/browse/JPERF-356
+
 ## [2.0.2] - 2018-12-18 🎂
-[2.0.1]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-2.0.2%0Drelease-2.0.1
+[2.0.2]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-2.0.2%0Drelease-2.0.1
 
 ### Fixed
 - Timeline for `OnPremisePerformanceTest`. Resolve [JPERF-309].
