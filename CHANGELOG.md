@@ -18,6 +18,9 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-2.0.2
 
+### Changed
+- Depend on `jira-actions`. Progress towards [JPERF-356].
+
 ### Added
 - Add support for `report:3`.
 - Include `aws-infrastructure` in the API scope. Progress towards [JPERF-356].
