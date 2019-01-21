@@ -16,7 +16,10 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 [behavioral compatibility]: http://cr.openjdk.java.net/~darcy/OpenJdkDevGuide/OpenJdkDevelopersGuide.v0.777.html#behavioral_compatibility
 
 ## [Unreleased]
-[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-2.0.2
+[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.0.0
+
+## [3.0.0] - 2019-01-22 🏅
+[3.0.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.0.0%0Drelease-2.0.1
 
 ### Changed
 - Depend on `jira-actions`. Progress towards [JPERF-356].
@@ -32,21 +35,15 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 
 [JPERF-356]: https://ecosystem.atlassian.net/browse/JPERF-356
 
-## [2.0.2] - 2018-12-18 🎂
-[2.0.2]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-2.0.2%0Drelease-2.0.1
-
-### Fixed
-- Timeline for `OnPremisePerformanceTest`. Resolve [JPERF-309].
-
-[JPERF-309]: https://ecosystem.atlassian.net/browse/JPERF-309
-
-## [2.0.1] - 2018-12-17 🎄
+## [2.0.1] - 2018-12-18 🎂
 [2.0.1]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-2.0.1%0Drelease-2.0.0
 
 ### Fixed
-- Enable diagnostics for `OnPremisePerformanceTest`. Resolve JPERF-232.
+- Timeline for `OnPremisePerformanceTest`. Resolve [JPERF-309].
+- Enable diagnostics for `OnPremisePerformanceTest`. Resolve [JPERF-232].
 
 [JPERF-232]: https://ecosystem.atlassian.net/browse/JPERF-232
+[JPERF-309]: https://ecosystem.atlassian.net/browse/JPERF-309
 
 ## [2.0.0] - 2018-12-03
 [2.0.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-2.0.0%0Drelease-1.3.0
