@@ -47,6 +47,11 @@ public class MyJiraOnPremiseIT {
          */
         jiraOnPremiseTest.setBrowser(MyCustomBrowser.class);
 
+        /*
+         * Optionally, customize the scenario.
+         */
+        jiraOnPremiseTest.setScenario(MyCustomScenario.class);
+
         jiraOnPremiseTest.run();
     }
 }
