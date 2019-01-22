@@ -10,7 +10,7 @@ plugins {
 
 dependencies {
     runtime("com.atlassian.performance.tools:jira-software-actions:[1.0.0,2.0.0)")
-    runtime("com.atlassian.performance.tools:virtual-users:[3.3.4,4.0.0)")
+    runtime("com.atlassian.performance.tools:virtual-users:[3.4.1,4.0.0)")
 }
 
 tasks.getByName("shadowJar", ShadowJar::class).apply {
