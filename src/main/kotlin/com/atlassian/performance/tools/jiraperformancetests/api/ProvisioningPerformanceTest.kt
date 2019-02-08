@@ -9,6 +9,7 @@ import com.atlassian.performance.tools.report.api.parser.SystemMetricsParser
 import com.atlassian.performance.tools.report.api.result.CohortResult
 import com.atlassian.performance.tools.report.api.result.FailedCohortResult
 import com.atlassian.performance.tools.report.api.result.FullCohortResult
+import com.atlassian.performance.tools.report.api.result.RawCohortResult
 import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
 import org.apache.logging.log4j.CloseableThreadContext
@@ -25,22 +26,61 @@ class ProvisioningPerformanceTest(
 ) {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
+    @Deprecated(
+        message = "Use executeAsync method instead.",
+        replaceWith = ReplaceWith(
+            expression = "executeAsync(workingDirectory, executor, behavior)"
+        )
+    )
     fun runAsync(
         workingDirectory: TestWorkspace,
         executor: ExecutorService,
         behavior: VirtualUserBehavior
-    ): CompletableFuture<CohortResult> {
-        return executor.submitWithLogContext(cohort) {
-            CloseableThreadContext.put("cohort", cohort).use {
-                run(workingDirectory, behavior)
-            }
+    ): CompletableFuture<CohortResult> = executor.submitWithLogContext(cohort) {
+        CloseableThreadContext.put("cohort", cohort).use {
+            run(workingDirectory, behavior)
         }
     }
 
+    @Deprecated(
+        message = "Use execute method instead.",
+        replaceWith = ReplaceWith(
+            expression = "execute(workingDirectory, behavior)"
+        )
+    )
     fun run(
         workingDirectory: TestWorkspace,
         behavior: VirtualUserBehavior
     ): CohortResult {
+        val result = execute(workingDirectory, behavior)
+        val failure = result.failure
+        return if (failure == null) {
+            return FullCohortResult(
+                cohort = cohort,
+                results = result.results,
+                actionParser = MergingActionMetricsParser(),
+                systemParser = SystemMetricsParser(),
+                nodeParser = MergingNodeCountParser()
+            )
+        } else {
+            FailedCohortResult(cohort, failure)
+        }
+    }
+
+    fun executeAsync(
+        workingDirectory: TestWorkspace,
+        executor: ExecutorService,
+        behavior: VirtualUserBehavior
+    ): CompletableFuture<RawCohortResult> = executor.submitWithLogContext(cohort) {
+        CloseableThreadContext.put("cohort", cohort).use {
+            execute(workingDirectory, behavior)
+        }
+    }
+
+    fun execute(
+        workingDirectory: TestWorkspace,
+        behavior: VirtualUserBehavior
+    ): RawCohortResult {
         val workspace = workingDirectory.directory.resolve(cohort).ensureDirectory()
         try {
             val provisionedInfrastructure = infrastructureFormula.provision(workspace)
@@ -61,15 +101,12 @@ class ProvisioningPerformanceTest(
             logger.info("Freeing AWS resources...")
             resource.release().get(2, TimeUnit.MINUTES)
             logger.info("AWS resources are freed")
-            return FullCohortResult(
+            return RawCohortResult.Factory().fullResult(
                 cohort = cohort,
-                results = downloadedResults,
-                actionParser = MergingActionMetricsParser(),
-                systemParser = SystemMetricsParser(),
-                nodeParser = MergingNodeCountParser()
+                results = downloadedResults
             )
         } catch (e: Exception) {
-            return FailedCohortResult(cohort, e)
+            return RawCohortResult.Factory().failedResult(cohort, workingDirectory.directory, e)
         }
     }
 }

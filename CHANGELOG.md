@@ -18,6 +18,12 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.0.0
 
+### Added
+- Expose failure and results in `ProvisioningPerformanceTest`. Resolve [JPERF-363] and [JPERF-391].
+
+[JPERF-363]: https://ecosystem.atlassian.net/browse/JPERF-363
+[JPERF-391]: https://ecosystem.atlassian.net/browse/JPERF-391
+
 ## [3.0.0] - 2019-01-22 🏅
 [3.0.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.0.0%0Drelease-2.0.1
 
