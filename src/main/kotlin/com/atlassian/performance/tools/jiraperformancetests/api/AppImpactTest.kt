@@ -5,13 +5,13 @@ import com.atlassian.performance.tools.aws.api.Investment
 import com.atlassian.performance.tools.awsinfrastructure.api.DatasetCatalogue
 import com.atlassian.performance.tools.awsinfrastructure.api.InfrastructureFormula
 import com.atlassian.performance.tools.awsinfrastructure.api.jira.StandaloneFormula
-import com.atlassian.performance.tools.awsinfrastructure.api.storage.JiraSoftwareStorage
 import com.atlassian.performance.tools.awsinfrastructure.api.virtualusers.Ec2VirtualUsersFormula
 import com.atlassian.performance.tools.infrastructure.api.app.AppSource
 import com.atlassian.performance.tools.infrastructure.api.app.Apps
 import com.atlassian.performance.tools.infrastructure.api.app.MavenApp
 import com.atlassian.performance.tools.infrastructure.api.app.NoApp
 import com.atlassian.performance.tools.infrastructure.api.dataset.Dataset
+import com.atlassian.performance.tools.infrastructure.api.distribution.PublicJiraSoftwareDistribution
 import com.atlassian.performance.tools.jiraactions.api.ActionType
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import com.atlassian.performance.tools.jiraperformancetests.CountingThreadFactory
@@ -111,7 +111,7 @@ class AppImpactTest(
                 lifespan = Duration.ofHours(1)
             ),
             jiraFormula = StandaloneFormula.Builder(
-                application = JiraSoftwareStorage(jiraVersion),
+                productDistribution = PublicJiraSoftwareDistribution(jiraVersion),
                 jiraHomeSource = dataset.jiraHomeSource,
                 database = dataset.database
             )

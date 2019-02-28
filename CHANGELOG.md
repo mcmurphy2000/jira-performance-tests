@@ -18,6 +18,14 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.1.0
 
+### Fixed
+- Download Jira installer from the official downloads site. Resolve [JPERF-277].
+
+### Added
+- Add support for `aws-infrastructure:2.6.0`.
+
+[JPERF-277]: https://ecosystem.atlassian.net/browse/JPERF-277
+
 ## [3.1.0] - 2019-02-19
 [3.1.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.1.0%0Drelease-3.0.0
 
