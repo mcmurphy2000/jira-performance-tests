@@ -5,7 +5,7 @@ import com.atlassian.performance.tools.aws.api.Investment
 import com.atlassian.performance.tools.awsinfrastructure.api.DatasetCatalogue
 import com.atlassian.performance.tools.awsinfrastructure.api.InfrastructureFormula
 import com.atlassian.performance.tools.awsinfrastructure.api.jira.StandaloneFormula
-import com.atlassian.performance.tools.awsinfrastructure.api.virtualusers.Ec2VirtualUsersFormula
+import com.atlassian.performance.tools.awsinfrastructure.api.virtualusers.StackVirtualUsersFormula
 import com.atlassian.performance.tools.infrastructure.api.app.AppSource
 import com.atlassian.performance.tools.infrastructure.api.app.Apps
 import com.atlassian.performance.tools.infrastructure.api.app.MavenApp
@@ -117,9 +117,7 @@ class AppImpactTest(
             )
                 .apps(Apps(listOf(app)))
                 .build(),
-            virtualUsersFormula = Ec2VirtualUsersFormula(
-                shadowJar = testJar
-            ),
+            virtualUsersFormula = StackVirtualUsersFormula.Builder(testJar).build(),
             aws = aws
         )
     )
