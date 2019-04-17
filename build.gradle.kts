@@ -67,7 +67,7 @@ dependencies {
     listOf(
         "com.atlassian.performance.tools:workspace:[2.0.0,3.0.0)",
         "com.atlassian.performance.tools:report:[3.1.0,4.0.0)",
-        "com.atlassian.performance.tools:aws-infrastructure:[2.6.0,3.0.0)",
+        "com.atlassian.performance.tools:aws-infrastructure:[2.8.0,3.0.0)",
         "com.atlassian.performance.tools:aws-resources:[1.0.0,2.0.0)",
         "com.atlassian.performance.tools:virtual-users:[3.4.1,4.0.0)",
         "com.atlassian.performance.tools:jira-actions:[3.0.0,4.0.0)",

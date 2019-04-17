@@ -1,17 +1,21 @@
 package com.atlassian.performance.tools.jiraperformancetests.api
 
 import com.atlassian.performance.tools.awsinfrastructure.api.InfrastructureFormula
+import com.atlassian.performance.tools.awsinfrastructure.api.TargetingVirtualUserOptions
 import com.atlassian.performance.tools.concurrency.api.submitWithLogContext
 import com.atlassian.performance.tools.io.api.ensureDirectory
 import com.atlassian.performance.tools.jiraactions.api.parser.MergingActionMetricsParser
 import com.atlassian.performance.tools.report.api.parser.MergingNodeCountParser
 import com.atlassian.performance.tools.report.api.parser.SystemMetricsParser
 import com.atlassian.performance.tools.report.api.result.RawCohortResult
+import com.atlassian.performance.tools.virtualusers.api.VirtualUserOptions
 import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
+import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserTarget
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
 import org.apache.logging.log4j.CloseableThreadContext
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.net.URI
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -69,19 +73,57 @@ class ProvisioningPerformanceTest(
         }
     }
 
+    @Deprecated(
+        "Use a non-deprecated `executeAsync` method, because this one hardcodes Jira admin credentials",
+        ReplaceWith(
+            "executeAsync(workingDirectory, executor, LegacyTargetingVirtualUserOptions(behavior))",
+            "com.atlassian.performance.tools.jiraperformancetests.api.LegacyTargetingVirtualUserOptions"
+        )
+    )
     fun executeAsync(
         workingDirectory: TestWorkspace,
         executor: ExecutorService,
         behavior: VirtualUserBehavior
-    ): CompletableFuture<RawCohortResult> = executor.submitWithLogContext(cohort) {
-        CloseableThreadContext.put("cohort", cohort).use {
-            execute(workingDirectory, behavior)
-        }
-    }
+    ): CompletableFuture<RawCohortResult> = executeAsync(
+        workingDirectory,
+        executor,
+        LegacyTargetingVirtualUserOptions(behavior)
+    )
 
+    @Deprecated(
+        "Use a non-deprecated `execute` method, because this one hardcodes Jira admin credentials",
+        ReplaceWith(
+            "execute(workingDirectory, LegacyTargetingVirtualUserOptions(behavior))",
+            "com.atlassian.performance.tools.jiraperformancetests.api.LegacyTargetingVirtualUserOptions"
+        )
+    )
     fun execute(
         workingDirectory: TestWorkspace,
         behavior: VirtualUserBehavior
+    ): RawCohortResult = execute(
+        workingDirectory,
+        LegacyTargetingVirtualUserOptions(behavior)
+    )
+
+    /**
+     * @since 3.3.0
+     */
+    fun executeAsync(
+        workingDirectory: TestWorkspace,
+        executor: ExecutorService,
+        options: TargetingVirtualUserOptions
+    ): CompletableFuture<RawCohortResult> = executor.submitWithLogContext(cohort) {
+        CloseableThreadContext.put("cohort", cohort).use {
+            execute(workingDirectory, options)
+        }
+    }
+
+    /**
+     * @since 3.3.0
+     */
+    fun execute(
+        workingDirectory: TestWorkspace,
+        options: TargetingVirtualUserOptions
     ): RawCohortResult {
         val workspace = workingDirectory.directory.resolve(cohort).ensureDirectory()
         try {
@@ -90,7 +132,7 @@ class ProvisioningPerformanceTest(
             val resource = provisionedInfrastructure.resource
             val downloadedResults: Path
             try {
-                infrastructure.applyLoad(behavior)
+                infrastructure.applyLoad(options)
             } catch (e: Exception) {
                 logger.error("Failed to test on $infrastructure", e)
                 throw e
@@ -111,4 +153,20 @@ class ProvisioningPerformanceTest(
             return RawCohortResult.Factory().failedResult(cohort, workingDirectory.directory, e)
         }
     }
+}
+
+private class LegacyTargetingVirtualUserOptions(
+    private val behavior: VirtualUserBehavior
+) : TargetingVirtualUserOptions {
+
+    override fun target(
+        jira: URI
+    ): VirtualUserOptions = VirtualUserOptions(
+        target = VirtualUserTarget(
+            webApplication = jira,
+            userName = "admin",
+            password = "admin"
+        ),
+        behavior = behavior
+    )
 }

@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.aws.api.Aws
 import com.atlassian.performance.tools.aws.api.Investment
 import com.atlassian.performance.tools.awsinfrastructure.api.DatasetCatalogue
 import com.atlassian.performance.tools.awsinfrastructure.api.InfrastructureFormula
+import com.atlassian.performance.tools.awsinfrastructure.api.TargetingVirtualUserOptions
 import com.atlassian.performance.tools.awsinfrastructure.api.jira.StandaloneFormula
 import com.atlassian.performance.tools.awsinfrastructure.api.virtualusers.StackVirtualUsersFormula
 import com.atlassian.performance.tools.infrastructure.api.app.AppSource
@@ -21,12 +22,15 @@ import com.atlassian.performance.tools.report.api.Criteria
 import com.atlassian.performance.tools.report.api.PerformanceCriteria
 import com.atlassian.performance.tools.report.api.judge.MaximumCoverageJudge
 import com.atlassian.performance.tools.virtualusers.api.VirtualUserLoad
+import com.atlassian.performance.tools.virtualusers.api.VirtualUserOptions
 import com.atlassian.performance.tools.virtualusers.api.browsers.Browser
 import com.atlassian.performance.tools.virtualusers.api.browsers.HeadlessChromeBrowser
 import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
+import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserTarget
 import com.atlassian.performance.tools.workspace.api.RootWorkspace
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
 import java.io.File
+import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.Duration
@@ -88,9 +92,21 @@ class AppImpactTest(
             .diagnosticsLimit(255)
             .seed(123)
             .build()
+        val virtualUserOptions = object : TargetingVirtualUserOptions {
+            override fun target(
+                jira: URI
+            ): VirtualUserOptions = VirtualUserOptions(
+                target = VirtualUserTarget(
+                    jira,
+                    userName = "admin",
+                    password = "admin"
+                ),
+                behavior = virtualUserBehavior
+            )
+        }
         val executor = Executors.newFixedThreadPool(2, CountingThreadFactory("standalone-stability-test"))
-        val futureBaselineResults = baseline.executeAsync(workspace, executor, virtualUserBehavior)
-        val futureExperimentResults = experiment.executeAsync(workspace, executor, virtualUserBehavior)
+        val futureBaselineResults = baseline.executeAsync(workspace, executor, virtualUserOptions)
+        val futureExperimentResults = experiment.executeAsync(workspace, executor, virtualUserOptions)
         val baselineResults = futureBaselineResults.get()
         val experimentResults = futureExperimentResults.get()
         executor.shutdownNow()
