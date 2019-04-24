@@ -1,15 +1,12 @@
 package com.atlassian.performance.tools.jiraperformancetests.api
 
 import com.atlassian.performance.tools.infrastructure.api.virtualusers.LocalVirtualUsers
-import com.atlassian.performance.tools.jiraactions.api.parser.MergingActionMetricsParser
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import com.atlassian.performance.tools.jirasoftwareactions.api.JiraSoftwareScenario
 import com.atlassian.performance.tools.report.api.FullReport
 import com.atlassian.performance.tools.report.api.FullTimeline
 import com.atlassian.performance.tools.report.api.HistoricalCohortsReporter
-import com.atlassian.performance.tools.report.api.parser.MergingNodeCountParser
-import com.atlassian.performance.tools.report.api.parser.SystemMetricsParser
-import com.atlassian.performance.tools.report.api.result.FullCohortResult
+import com.atlassian.performance.tools.report.api.result.RawCohortResult
 import com.atlassian.performance.tools.virtualusers.api.VirtualUserLoad
 import com.atlassian.performance.tools.virtualusers.api.VirtualUserOptions
 import com.atlassian.performance.tools.virtualusers.api.browsers.Browser
@@ -65,12 +62,9 @@ class OnPremisePerformanceTest(
         } finally {
             localVirtualUsers.gatherResults()
         }
-        val result = FullCohortResult(
+        val result = RawCohortResult.Factory().fullResult(
             cohort = cohortName,
-            results = workspace.currentTask.directory,
-            actionParser = MergingActionMetricsParser(),
-            systemParser = SystemMetricsParser(),
-            nodeParser = MergingNodeCountParser()
+            results = workspace.currentTask.directory
         ).prepareForJudgement(
             timeline = FullTimeline()
         )

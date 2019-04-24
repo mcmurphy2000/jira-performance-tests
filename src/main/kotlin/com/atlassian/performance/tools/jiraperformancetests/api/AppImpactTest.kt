@@ -15,6 +15,7 @@ import com.atlassian.performance.tools.infrastructure.api.distribution.PublicJir
 import com.atlassian.performance.tools.jiraactions.api.ActionType
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import com.atlassian.performance.tools.jiraperformancetests.CountingThreadFactory
+import com.atlassian.performance.tools.jiraperformancetests.RawRegressionResults
 import com.atlassian.performance.tools.jirasoftwareactions.api.JiraSoftwareScenario
 import com.atlassian.performance.tools.report.api.Criteria
 import com.atlassian.performance.tools.report.api.PerformanceCriteria
@@ -71,7 +72,7 @@ class AppImpactTest(
 
     private fun runRegression(
         load: VirtualUserLoad
-    ): RegressionResults {
+    ): RawRegressionResults {
         val workspace = RootWorkspace(outputDirectory).currentTask.isolateTest("App impact test")
         val baseline = testCohort(
             cohort = "without $appLabel",
@@ -88,13 +89,12 @@ class AppImpactTest(
             .seed(123)
             .build()
         val executor = Executors.newFixedThreadPool(2, CountingThreadFactory("standalone-stability-test"))
-        val futureBaselineResults = baseline.runAsync(workspace, executor, virtualUserBehavior)
-        val futureExperimentResults = experiment.runAsync(workspace, executor, virtualUserBehavior)
+        val futureBaselineResults = baseline.executeAsync(workspace, executor, virtualUserBehavior)
+        val futureExperimentResults = experiment.executeAsync(workspace, executor, virtualUserBehavior)
         val baselineResults = futureBaselineResults.get()
         val experimentResults = futureExperimentResults.get()
         executor.shutdownNow()
-
-        return RegressionResults(
+        return RawRegressionResults(
             baseline = baselineResults,
             experiment = experimentResults
         )
@@ -123,7 +123,7 @@ class AppImpactTest(
     )
 
     private fun assertNoRegression(
-        results: RegressionResults,
+        results: RawRegressionResults,
         load: VirtualUserLoad
     ) {
         val reportWorkspace = outputDirectory.resolve("surefire-reports")

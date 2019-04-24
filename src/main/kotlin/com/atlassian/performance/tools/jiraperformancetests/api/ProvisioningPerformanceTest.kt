@@ -6,9 +6,6 @@ import com.atlassian.performance.tools.io.api.ensureDirectory
 import com.atlassian.performance.tools.jiraactions.api.parser.MergingActionMetricsParser
 import com.atlassian.performance.tools.report.api.parser.MergingNodeCountParser
 import com.atlassian.performance.tools.report.api.parser.SystemMetricsParser
-import com.atlassian.performance.tools.report.api.result.CohortResult
-import com.atlassian.performance.tools.report.api.result.FailedCohortResult
-import com.atlassian.performance.tools.report.api.result.FullCohortResult
 import com.atlassian.performance.tools.report.api.result.RawCohortResult
 import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
@@ -32,12 +29,14 @@ class ProvisioningPerformanceTest(
             expression = "executeAsync(workingDirectory, executor, behavior)"
         )
     )
+    @Suppress("DEPRECATION")
     fun runAsync(
         workingDirectory: TestWorkspace,
         executor: ExecutorService,
         behavior: VirtualUserBehavior
-    ): CompletableFuture<CohortResult> = executor.submitWithLogContext(cohort) {
+    ): CompletableFuture<com.atlassian.performance.tools.report.api.result.CohortResult> = executor.submitWithLogContext(cohort) {
         CloseableThreadContext.put("cohort", cohort).use {
+            @Suppress("DEPRECATION")
             run(workingDirectory, behavior)
         }
     }
@@ -48,14 +47,16 @@ class ProvisioningPerformanceTest(
             expression = "execute(workingDirectory, behavior)"
         )
     )
+    @Suppress("DEPRECATION")
     fun run(
         workingDirectory: TestWorkspace,
         behavior: VirtualUserBehavior
-    ): CohortResult {
+    ): com.atlassian.performance.tools.report.api.result.CohortResult {
+        @Suppress("DEPRECATION")
         val result = execute(workingDirectory, behavior)
         val failure = result.failure
         return if (failure == null) {
-            return FullCohortResult(
+            return com.atlassian.performance.tools.report.api.result.FullCohortResult(
                 cohort = cohort,
                 results = result.results,
                 actionParser = MergingActionMetricsParser(),
@@ -63,7 +64,8 @@ class ProvisioningPerformanceTest(
                 nodeParser = MergingNodeCountParser()
             )
         } else {
-            FailedCohortResult(cohort, failure)
+            @Suppress("DEPRECATION")
+            com.atlassian.performance.tools.report.api.result.FailedCohortResult(cohort, failure)
         }
     }
 

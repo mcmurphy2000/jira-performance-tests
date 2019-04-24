@@ -18,6 +18,9 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.2.0
 
+### Deprecated
+- Deprecate `RegressionResults`, because it spreads the deprecated `CohortResult`.
+
 ## [3.2.0] - 2019-02-28
 [3.2.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.2.0%0Drelease-3.1.0
 
