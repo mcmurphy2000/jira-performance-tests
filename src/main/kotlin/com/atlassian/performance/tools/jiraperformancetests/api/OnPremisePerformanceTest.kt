@@ -34,13 +34,14 @@ class OnPremisePerformanceTest(
     var testDuration: Duration = Duration.ofMinutes(30)
     var workspace: RootWorkspace = RootWorkspace()
     private val cohortName = "my-jira"
+    private val load = VirtualUserLoad.Builder()
+        .virtualUsers(virtualUsers)
+        .flat(testDuration)
+        .build()
 
     fun run() {
         val virtualUserBehavior = VirtualUserBehavior.Builder(scenario)
-            .load(VirtualUserLoad(
-                virtualUsers = virtualUsers,
-                flat = testDuration
-            ))
+            .load(load)
             .browser(browser)
             .diagnosticsLimit(64)
             .seed(Random().nextLong())

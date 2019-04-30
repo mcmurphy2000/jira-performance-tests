@@ -64,12 +64,12 @@ class AppImpactTest(
     private val appLabel = app.getLabel()
 
     fun run() {
-        val load = VirtualUserLoad(
-            virtualUsers = 10,
-            hold = Duration.ZERO,
-            ramp = Duration.ZERO,
-            flat = duration
-        )
+        val load = VirtualUserLoad.Builder()
+            .virtualUsers(10)
+            .hold(Duration.ZERO)
+            .ramp(Duration.ZERO)
+            .flat(duration)
+            .build()
         val results = runRegression(load)
         assertNoRegression(results, load)
     }
