@@ -4,15 +4,15 @@ import com.atlassian.performance.tools.aws.api.Aws
 import com.atlassian.performance.tools.aws.api.Investment
 import com.atlassian.performance.tools.awsinfrastructure.api.DatasetCatalogue
 import com.atlassian.performance.tools.awsinfrastructure.api.InfrastructureFormula
-import com.atlassian.performance.tools.awsinfrastructure.api.VirtualUsersConfiguration
+import com.atlassian.performance.tools.awsinfrastructure.api.TargetingVirtualUserOptions
 import com.atlassian.performance.tools.awsinfrastructure.api.jira.DataCenterFormula
-import com.atlassian.performance.tools.awsinfrastructure.api.storage.JiraSoftwareStorage
 import com.atlassian.performance.tools.awsinfrastructure.api.virtualusers.Ec2VirtualUsersFormula
 import com.atlassian.performance.tools.infrastructure.api.app.AppSource
 import com.atlassian.performance.tools.infrastructure.api.app.Apps
 import com.atlassian.performance.tools.infrastructure.api.app.MavenApp
 import com.atlassian.performance.tools.infrastructure.api.app.NoApp
 import com.atlassian.performance.tools.infrastructure.api.dataset.Dataset
+import com.atlassian.performance.tools.infrastructure.api.distribution.PublicJiraSoftwareDistribution
 import com.atlassian.performance.tools.infrastructure.api.jira.JiraNodeConfig
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import com.atlassian.performance.tools.jirasoftwareactions.api.JiraSoftwareScenario
@@ -20,10 +20,13 @@ import com.atlassian.performance.tools.report.api.FullReport
 import com.atlassian.performance.tools.report.api.StandardTimeline
 import com.atlassian.performance.tools.report.api.judge.FailureJudge
 import com.atlassian.performance.tools.virtualusers.api.VirtualUserLoad
+import com.atlassian.performance.tools.virtualusers.api.VirtualUserOptions
+import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserBehavior
+import com.atlassian.performance.tools.virtualusers.api.config.VirtualUserTarget
 import com.atlassian.performance.tools.workspace.api.RootWorkspace
 import com.atlassian.performance.tools.workspace.api.TestWorkspace
-import com.google.common.util.concurrent.ThreadFactoryBuilder
 import java.io.File
+import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.Duration
@@ -32,13 +35,14 @@ import java.util.concurrent.Executors
 /**
  * Tests the Data Center Readiness Program of the [app].
  *
- * Summary of test results (i.e. mean latency) can be found in 'summary-per-cohort.csv' file.
- * You should have it in './target/jpt-workspace/<timestamp>/dc-readiness-tests/' directory.
+ * Summary of test results (i.e. mean latency) can be found in `summary-per-cohort.csv` file.
+ * You should have it in `./target/jpt-workspace/<timestamp>/dc-readiness-tests/` directory.
  *
  * For the "Endpoint testing" you should submit 'on-one-node-without-app' vs 'on-one-node' cohorts,
  * while for "Scale testing" you should submit 'one-one-node', 'on-two-nodes', 'on-four-nodes' results.
- * Ideally converted to a nice chart. For details visit
- * https://developer.atlassian.com/platform/marketplace/dc-apps-performance-and-scale-testing/
+ * Ideally converted to a nice chart. For details visit the [DC apps guide].
+ *
+ * [DC apps guide]: https://developer.atlassian.com/platform/marketplace/dc-apps-performance-and-scale-testing/
  */
 class DcReadinessTests(
     private val app: AppSource,
@@ -57,17 +61,15 @@ class DcReadinessTests(
     var scenario: Class<out Scenario> = JiraSoftwareScenario::class.java
     var jiraVersion: String = "7.5.0"
     var duration: Duration = Duration.ofMinutes(20)
-    internal var dataset: Dataset = DatasetCatalogue().largeJira()
+    internal var dataset: Dataset = DatasetCatalogue().largeJiraSeven()
     private val outputDirectory: Path = Paths.get("target")
     private val appLabel = app.getLabel()
 
     fun run() {
-        val virtualUserLoad = VirtualUserLoad(
-            virtualUsers = 10,
-            hold = Duration.ZERO,
-            ramp = Duration.ZERO,
-            flat = duration
-        )
+        val load = VirtualUserLoad.Builder()
+            .virtualUsers(10)
+            .flat(duration)
+            .build()
         val workspace = RootWorkspace(outputDirectory).currentTask.isolateTest("dc-readiness-tests")
         val tests = listOf(
             dcTestingCohort(
@@ -91,21 +93,28 @@ class DcReadinessTests(
                 numberOfNodes = 4
             )
         )
-        val vuConfig = VirtualUsersConfiguration(
-            scenario = scenario,
-            virtualUserLoad = virtualUserLoad
-        )
+        val vuOptions = object : TargetingVirtualUserOptions {
+            override fun target(
+                jira: URI
+            ): VirtualUserOptions = VirtualUserOptions(
+                VirtualUserTarget(
+                    webApplication = jira,
+                    userName = "admin",
+                    password = "admin"
+                ),
+                VirtualUserBehavior.Builder(scenario)
+                    .load(load)
+                    .build()
+            )
+        }
 
-        val executor = Executors.newFixedThreadPool(
-            tests.size,
-            ThreadFactoryBuilder()
-                .setNameFormat("dc-readiness-test-thread-%d")
-                .build()
-        )
+        val executor = Executors.newFixedThreadPool(tests.size) {
+            Thread(it, "dc-readiness-test-thread")
+        }
         val results = tests
-            .map { it.runAsync(workspace, executor, vuConfig) }
+            .map { it.executeAsync(workspace, executor, vuOptions) }
             .map { it.get() }
-            .map { it.prepareForJudgement(StandardTimeline(virtualUserLoad.total)) }
+            .map { it.prepareForJudgement(StandardTimeline(load.total)) }
         executor.shutdownNow()
 
         results.forEach {
@@ -128,16 +137,21 @@ class DcReadinessTests(
                 useCase = "Measure app impact of $appLabel across a Data Center cluster",
                 lifespan = Duration.ofHours(1)
             ),
-            jiraFormula = DataCenterFormula(
-                configs = JiraNodeConfig().clone(numberOfNodes),
-                apps = Apps(listOf(app)),
-                application = JiraSoftwareStorage(jiraVersion),
+            jiraFormula = DataCenterFormula.Builder(
                 jiraHomeSource = dataset.jiraHomeSource,
-                database = dataset.database
-            ),
-            virtualUsersFormula = Ec2VirtualUsersFormula(
-                shadowJar = testJar
-            ),
+                database = dataset.database,
+                productDistribution = PublicJiraSoftwareDistribution(jiraVersion)
+            )
+                .configs(
+                    (1..numberOfNodes).map {
+                        JiraNodeConfig.Builder()
+                            .name("dc-$it")
+                            .build()
+                    }
+                )
+                .apps(Apps(listOf(app)))
+                .build(),
+            virtualUsersFormula = Ec2VirtualUsersFormula.Builder(testJar).build(),
             aws = aws
         )
     )
