@@ -19,17 +19,21 @@ class VendorJourneyTest {
     @Category(AcceptanceCategory::class)
     fun shouldRunRefApp() {
         testRefApp(
-            listOf("install", "-Djpt.version=$jptVersion", "-Papp-impact"),
+            listOf("-Papp-impact"),
             Duration.ofMinutes(55)
         )
     }
 
     private fun testRefApp(
-        mavenArgs: List<String>,
+        extraMavenArgs: List<String>,
         timeout: Duration
     ) {
         val mavenProcess = MavenProcess(
-            arguments = mavenArgs,
+            arguments = listOf(
+                "install",
+                "-Djpt.version=$jptVersion",
+                "-Djpt.housekeeping.protection.override=us-east-1"
+            ) + extraMavenArgs,
             processExecutor = ProcessExecutor()
                 .directory(Paths.get("examples", "ref-app").toFile())
                 .timeout(timeout.seconds, TimeUnit.SECONDS)
@@ -47,7 +51,7 @@ class VendorJourneyTest {
     @Category(AcceptanceCategory::class)
     fun shouldTestDcReadiness() {
         testRefApp(
-            listOf("install", "-Djpt.version=$jptVersion", "-Pdc-readiness"),
+            listOf("-Pdc-readiness"),
             Duration.ofMinutes(70)
         )
     }
