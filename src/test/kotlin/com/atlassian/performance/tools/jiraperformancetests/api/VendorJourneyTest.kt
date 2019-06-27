@@ -8,19 +8,31 @@ import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.zeroturnaround.exec.ProcessExecutor
 import java.nio.file.Paths
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 class VendorJourneyTest {
 
+    private val jptVersion: String = SystemProperty("jpt.version").dereference()
+
     @Test
     @Category(AcceptanceCategory::class)
     fun shouldRunRefApp() {
-        val jptVersion: String = SystemProperty("jpt.version").dereference()
+        testRefApp(
+            listOf("install", "-Djpt.version=$jptVersion", "-Papp-impact"),
+            Duration.ofMinutes(55)
+        )
+    }
+
+    private fun testRefApp(
+        mavenArgs: List<String>,
+        timeout: Duration
+    ) {
         val mavenProcess = MavenProcess(
-            arguments = listOf("install", "-Djpt.version=$jptVersion"),
+            arguments = mavenArgs,
             processExecutor = ProcessExecutor()
                 .directory(Paths.get("examples", "ref-app").toFile())
-                .timeout(55, TimeUnit.MINUTES)
+                .timeout(timeout.seconds, TimeUnit.SECONDS)
         )
 
         val result = mavenProcess.run()
@@ -29,5 +41,14 @@ class VendorJourneyTest {
         assertThat(lastFewLinesOfOutput)
             .`as`("last few lines of output")
             .contains("BUILD SUCCESS")
+    }
+
+    @Test
+    @Category(AcceptanceCategory::class)
+    fun shouldTestDcReadiness() {
+        testRefApp(
+            listOf("install", "-Djpt.version=$jptVersion", "-Pdc-readiness"),
+            Duration.ofMinutes(70)
+        )
     }
 }

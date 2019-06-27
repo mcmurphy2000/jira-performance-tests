@@ -99,25 +99,39 @@ JPT ships with a pre-configured policy for managing AWS access.
 You can view and edit this policy through the [aws-policy.json file](../../aws-policy.json).
 For more information, see [Policies and Permissions](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html).
 
-### Running benchmark tests with JPT
+### Running performance tests
 
-Once you've applied your app and set your AWS credentials, run the following command from the repository's root:
+You can run different kinds of tests.
 
+#### Running app impact
+
+To see how your app passively impacts Jira, run:
 
 ```
 cd jira-performance-tests/examples/ref-app/
-./mvnw install
+./mvnw install -Papp-impact
 ```
 
+#### Running DC readiness
+
+To get basic results for the DC Readiness, run:
+
+```
+cd jira-performance-tests/examples/ref-app/
+./mvnw install -Pdc-readiness
+```
+
+#### Reading the test results
+
 Depending on your bandwidth, the entire test (from provisioning to data collection) could take around 45 minutes.
-JPT will display test results for both baseline and experiment instances:
+JPT will display test results in the standard output:
 
 ![Plain text report](plain-text-report.png)
 
 JPT will also generate detailed test results and store them under `examples/ref-app/reference-jira-app-performance-tests/target/`:
 
-- `detailed.log`: for detailed test logs.
 - `/jpt-workspace/` subdirectory: contains raw test results for both baseline and experiment instances.
+- `detailed.log`: for detailed test logs.
 - `/surefire-reports/` subdirectory: contains detailed results in CSV and HTML formats.
 
-After completing the test, JPT will terminate both instances it provisioned in AWS.
+After completing the test successfully, JPT will terminate all provisioned AWS resources.
