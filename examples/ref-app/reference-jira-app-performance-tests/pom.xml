@@ -21,8 +21,8 @@
                         <configuration>
                             <includes>
                                 <include>**/SlowEventListenerPerformanceIT.java</include>
-                                <skipITs>false</skipITs>
                             </includes>
+                            <skipITs>false</skipITs>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -37,8 +37,8 @@
                         <configuration>
                             <includes>
                                 <include>**/MyDcReadinessTestIT.java</include>
-                                <skipITs>false</skipITs>
                             </includes>
+                            <skipITs>false</skipITs>
                         </configuration>
                     </plugin>
                 </plugins>
