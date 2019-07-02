@@ -130,6 +130,7 @@ class DcReadiness {
         List<String> labels = results
             .stream()
             .flatMap(it -> it.getActionLabels().stream())
+            .distinct()
             .sorted()
             .collect(toList());
         new FullReport().dump(
