@@ -18,6 +18,11 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.3.0
 
+### Added
+- Add a public `feature` field to `GroupableTest`. Resolve [JPERF-550].
+
+[JPERF-550]: https://ecosystem.atlassian.net/browse/JPERF-550
+
 ## [3.3.0] - 2019-05-02
 [3.3.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.3.0%0Drelease-3.2.0
 

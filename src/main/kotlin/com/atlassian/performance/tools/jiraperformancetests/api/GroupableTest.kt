@@ -5,7 +5,7 @@ import com.atlassian.performance.tools.workspace.api.TestWorkspace
 import org.apache.logging.log4j.CloseableThreadContext
 
 abstract class GroupableTest(
-    protected val feature: String
+    val feature: String
 ) {
     fun run(
         group: String,
