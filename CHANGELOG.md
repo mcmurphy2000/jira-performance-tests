@@ -16,7 +16,10 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 [behavioral compatibility]: http://cr.openjdk.java.net/~darcy/OpenJdkDevGuide/OpenJdkDevelopersGuide.v0.777.html#behavioral_compatibility
 
 ## [Unreleased]
-[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.3.0
+[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.4.0
+
+## [3.4.0] - 2019-08-09
+[3.4.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.4.0%0Drelease-3.3.0
 
 ### Added
 - Add a public `feature` field to `GroupableTest`. Resolve [JPERF-550].
