@@ -18,6 +18,11 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.4.1
 
+### Fixed
+- Update the `aws-policy.json`. Fix [JPERF-225].
+
+[JPERF-225]: https://ecosystem.atlassian.net/browse/JPERF-225
+
 ## [3.4.1] - 2019-11-15
 [3.4.1]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.4.1%0Drelease-3.4.0
 
