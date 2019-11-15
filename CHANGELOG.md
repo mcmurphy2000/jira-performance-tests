@@ -16,7 +16,13 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 [behavioral compatibility]: http://cr.openjdk.java.net/~darcy/OpenJdkDevGuide/OpenJdkDevelopersGuide.v0.777.html#behavioral_compatibility
 
 ## [Unreleased]
-[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.4.0
+[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.4.1
+
+## [3.4.1] - 2019-11-15
+[3.4.1]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.4.1%0Drelease-3.4.0
+
+### Fixed
+- Respect `VirtualUserLoad` overrides in `OnPremisePerformanceTest`.
 
 ## [3.4.0] - 2019-08-09
 [3.4.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.4.0%0Drelease-3.3.0
