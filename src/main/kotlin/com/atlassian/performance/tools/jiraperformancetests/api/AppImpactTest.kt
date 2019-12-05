@@ -12,6 +12,7 @@ import com.atlassian.performance.tools.infrastructure.api.app.Apps
 import com.atlassian.performance.tools.infrastructure.api.app.MavenApp
 import com.atlassian.performance.tools.infrastructure.api.app.NoApp
 import com.atlassian.performance.tools.infrastructure.api.dataset.Dataset
+import com.atlassian.performance.tools.infrastructure.api.distribution.ProductDistribution
 import com.atlassian.performance.tools.infrastructure.api.distribution.PublicJiraSoftwareDistribution
 import com.atlassian.performance.tools.jiraactions.api.ActionType
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
@@ -57,7 +58,13 @@ class AppImpactTest(
     var scenario: Class<out Scenario> = JiraSoftwareScenario::class.java
     var browser: Class<out Browser> = HeadlessChromeBrowser::class.java
     var criteria: Map<ActionType<*>, Criteria> = emptyMap()
+    var productDistribution: ProductDistribution = PublicJiraSoftwareDistribution("7.5.0")
+    @Deprecated("Use productDistribution instead")
     var jiraVersion: String = "7.5.0"
+        set(value) {
+            field = value
+            productDistribution = PublicJiraSoftwareDistribution(value)
+        }
     var duration: Duration = Duration.ofMinutes(20)
     internal var dataset: Dataset = DatasetCatalogue().largeJiraSeven()
     private val outputDirectory: Path = Paths.get("target")
@@ -127,7 +134,7 @@ class AppImpactTest(
                 lifespan = Duration.ofHours(1)
             ),
             jiraFormula = StandaloneFormula.Builder(
-                productDistribution = PublicJiraSoftwareDistribution(jiraVersion),
+                productDistribution = productDistribution,
                 jiraHomeSource = dataset.jiraHomeSource,
                 database = dataset.database
             )

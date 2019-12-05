@@ -18,9 +18,16 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 ## [Unreleased]
 [Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.4.1
 
+### Added
+- Add `AppImpactTest.productDistribution`. Resolve [JPERF-167].
+
+### Deprecated
+- Deprecate `AppImpactTest.jiraVersion` in favor of `AppImpactTest.productDistribution` to avoid ambiguity.
+
 ### Fixed
 - Update the `aws-policy.json`. Fix [JPERF-225].
 
+[JPERF-167]: https://ecosystem.atlassian.net/browse/JPERF-167
 [JPERF-225]: https://ecosystem.atlassian.net/browse/JPERF-225
 
 ## [3.4.1] - 2019-11-15

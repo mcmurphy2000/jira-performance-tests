@@ -8,6 +8,7 @@ import com.atlassian.performance.tools.aws.api.StorageLocation
 import com.atlassian.performance.tools.aws.api.SupportCapacityMediator
 import com.atlassian.performance.tools.awsinfrastructure.api.DatasetCatalogue
 import com.atlassian.performance.tools.infrastructure.api.app.AppSource
+import com.atlassian.performance.tools.infrastructure.api.distribution.PublicJiraSoftwareDistribution
 import com.atlassian.performance.tools.io.api.dereference
 import com.atlassian.performance.tools.jirasoftwareactions.api.JiraSoftwareScenario
 import org.apache.http.message.BasicHeaderValueParser.INSTANCE
@@ -51,6 +52,7 @@ class AppImpactTestSmokeTest {
         )
         test.scenario = JiraSoftwareScenario::class.java
         test.duration = Duration.ofMinutes(1)
+        test.productDistribution = PublicJiraSoftwareDistribution("7.5.0")
         test.dataset = DatasetCatalogue().custom(
             label = "700 issues",
             location = StorageLocation(
