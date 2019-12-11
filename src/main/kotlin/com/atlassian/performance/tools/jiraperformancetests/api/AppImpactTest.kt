@@ -66,7 +66,11 @@ class AppImpactTest(
             productDistribution = PublicJiraSoftwareDistribution(value)
         }
     var duration: Duration = Duration.ofMinutes(20)
-    internal var dataset: Dataset = DatasetCatalogue().largeJiraSeven()
+
+    /**
+     * @since 3.6.0
+     */
+    var dataset: Dataset = DatasetCatalogue().largeJiraSeven()
     private val outputDirectory: Path = Paths.get("target")
     private val appLabel = app.getLabel()
 
