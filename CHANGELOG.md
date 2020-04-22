@@ -16,7 +16,10 @@ The API consists of all public Java types from `com.atlassian.performance.tools.
 [behavioral compatibility]: http://cr.openjdk.java.net/~darcy/OpenJdkDevGuide/OpenJdkDevelopersGuide.v0.777.html#behavioral_compatibility
 
 ## [Unreleased]
-[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.5.0
+[Unreleased]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/master%0Drelease-3.6.0
+
+## [3.6.0] - 2019-12-13
+[3.6.0]: https://bitbucket.org/atlassian/jira-performance-tests/branches/compare/release-3.6.0%0Drelease-3.5.0
 
 ### Added
 - Add `AppImpactTest.dataset`. Fix [JPERF-510].
