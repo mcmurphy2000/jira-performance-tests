@@ -20,8 +20,7 @@ At present, JPT supports benchmarking for Jira Software.
 
 ### Data changes to tested instance
 
-Keep in mind that these actions will affect the instance’s data set, as Jira will treat JPT traffic just like normal user traffic. 
-These changes include:
+Keep in mind that these actions will affect the instance’s data set, as Jira will treat JPT traffic just like normal user traffic. These changes include:
 
  1. Globally disabling the Rich Text Editor
  2. Changes to the browse history of the test user (recent issues, recent boards, and so on)
@@ -90,7 +89,7 @@ Perform the following steps on any computer with network access to your test env
 
     `git clone https://bitbucket.org/atlassian/jira-performance-tests.git`
 
-2. Open the following JAVA file:
+2. Open the following Java file:
 
     `jira-performance-tests/examples/btf-test/src/test/java/com/atlassian/performance/tools/btftest/MyJiraOnPremiseIT.java`
 

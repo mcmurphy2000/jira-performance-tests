@@ -3,7 +3,7 @@
 Thank you for taking the time to provide feedback on JPT.
 
 ## Chat
-Come to our [public JPT community Slack][slack-invite] and chat.
+Come to our [public #jpt Slack channel][slack-invite] and chat.
 Feel free to ask any questions, discuss or lurk.
 
 ## Jira

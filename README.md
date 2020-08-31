@@ -1,5 +1,8 @@
 ![picture](docs/JPT-banner@1x.png)
 
+
+**Atlassian developer and looking for internal JPT repository? Visit [go/ijpt](http://go/ijpt).**
+
 Jira Performance Tests (JPT) is a fully-automated performance benchmarking tool designed for Jira Server and Jira Data Center.
 It can manage all aspects of the testing process -- provisioning a new Jira instance, running performance tests, and generating
 a report.
@@ -8,8 +11,6 @@ JPT focuses on _user experience_, allowing you to test both front-end and back-e
 using simple HTTP traffic, JPT uses browsers to test end-to-end interactions.
 
 Atlassian maintains and uses JPT to benchmark Jira's performance each release (see [Scaling Jira](https://confluence.atlassian.com/enterprise/scaling-jira-867028644.html) for details).
-If you're an Atlassian developer, you can access their [internal JPT tests](https://stash.atlassian.com/projects/JIRASERVER/repos/jira-performance-tests/browse/README.md)
-using your employee credentials.
 
 ## Features
 
@@ -22,8 +23,7 @@ using your employee credentials.
   - Starts with reasonable defaults
   - Gathers system and GC metrics
   - Supports Jira 7.2 and up
-  - Compares Jira with and without plugin installed
-  - _(planned)_ Supports Jira 8+
+  - Compares Jira with and without an app installed
 
 ## Basic use cases
 

@@ -14,7 +14,8 @@ JPT starts by provisioning two Jira instances in Amazon Web Services (AWS):
 * a _baseline_ instance, with no apps installed, and
 * an _experiment_ instance, with your app installed
 
-JPT will then benchmark both instances, running the most common user actions multiple times. When JPT finishes testing either instance, it reports:
+JPT will then benchmark both instances, running the most common user actions multiple times. 
+When JPT finishes testing either instance, it reports:
 
 1. What **user actions** it performed
 2. **How many times** it performed each action
@@ -42,7 +43,7 @@ For comparison, running a two-node Jira Software Data Center instance in AWS typ
 Although JPT cleans up AWS resources after each test, sometimes test may be terminated abruptly and you can be left with running instances that will incur continuous cost.
 Each JPT instance in AWS is marked with expiry tag, running the following command will clean up all expired instances:  
 Run from the `examples/ref-app` directory: `./mvnw -pl reference-jira-app-performance-tests test-compile exec:java@clean-all-expired`  
-In our own environment we have it run automatically every hour.
+In our (Atlassian) own environment we have it run automatically every hour.
 
 ### Windows Compatibility
 
