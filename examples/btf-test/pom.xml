@@ -80,9 +80,15 @@
             <artifactId>jira-performance-tests</artifactId>
             <version>${jpt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-func-tests</artifactId>
+            <version>${jira.version}</version>
+        </dependency>
     </dependencies>
     <properties>
-        <jpt.version>3.5.0</jpt.version>
+        <jpt.version>3.6.0</jpt.version>
+        <jira.version>8.13.0-QR-20200911124521</jira.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

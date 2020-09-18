@@ -22,7 +22,7 @@ public class MyJiraOnPremiseIT {
         /*
          * Point this toward tested Jira.
          */
-        final URI myJira = new URI("http://localhost:8090/jira/");
+        final URI myJira = new URI("http://35.159.0.96:8080/");
 
         final OnPremisePerformanceTest jiraOnPremiseTest = new OnPremisePerformanceTest(myJira);
 
@@ -40,7 +40,7 @@ public class MyJiraOnPremiseIT {
         /*
          * Optionally, change the test duration.
          */
-        jiraOnPremiseTest.setTestDuration(Duration.ofMinutes(5));
+        jiraOnPremiseTest.setTestDuration(Duration.ofMinutes(1));
 
         /*
          * Optionally, customize the browser.
